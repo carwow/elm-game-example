@@ -6,7 +6,7 @@ import Game exposing (Game)
 
 
 type Msg
-    = NoOp
+    = FrameUpdate Float
 
 
 main : Program () Game Msg
@@ -20,10 +20,10 @@ main =
 
 
 update : Msg -> Game -> ( Game, Cmd Msg )
-update msg model =
+update msg game =
     case msg of
-        _ ->
-            ( model, Cmd.none )
+        FrameUpdate deltaMs ->
+            ( Game.update deltaMs game, Cmd.none )
 
 
 init : ( Game, Cmd Msg )
@@ -33,4 +33,5 @@ init =
 
 subscriptions : Game -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Sub.batch
+        [ onAnimationFrameDelta FrameUpdate ]

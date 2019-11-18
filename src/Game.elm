@@ -1,4 +1,4 @@
-module Game exposing (Game, init, render)
+module Game exposing (Game, init, render, update)
 
 import Html exposing (Html, div)
 import Svg exposing (Svg, g, rect, svg)
@@ -22,6 +22,21 @@ init =
     }
 
 
+update : Float -> Game -> Game
+update deltaMs game =
+    { game | hero = moveHero deltaMs game.hero }
+
+
+moveHero : Float -> Hero -> Hero
+moveHero deltaMs hero =
+    let
+        speed =
+            0.05 * deltaMs
+    in
+    { hero | x = hero.x + speed }
+
+
+backgroundSize : String
 backgroundSize =
     "600px"
 
