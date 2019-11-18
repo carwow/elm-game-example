@@ -1,6 +1,7 @@
-module Game exposing (Game, init, render, update)
+module Game exposing (Game, init, render, update, updateKeyboard)
 
 import Html exposing (Html, div)
+import Keyboard exposing (Keyboard)
 import Svg exposing (Svg, g, rect, svg)
 import Svg.Attributes as A
 
@@ -13,25 +14,39 @@ type alias Hero =
 
 type alias Game =
     { hero : Hero
+    , keyboard : Keyboard
     }
 
 
 init : Game
 init =
     { hero = { x = 300, y = 300 }
+    , keyboard = Keyboard.init
     }
 
 
 update : Float -> Game -> Game
 update deltaMs game =
-    { game | hero = moveHero deltaMs game.hero }
+    { game | hero = moveHero deltaMs game.keyboard game.hero }
 
 
-moveHero : Float -> Hero -> Hero
-moveHero deltaMs hero =
+updateKeyboard : Keyboard -> Game -> Game
+updateKeyboard keyboard game =
+    { game | keyboard = keyboard }
+
+
+moveHero : Float -> Keyboard -> Hero -> Hero
+moveHero deltaMs keyboard hero =
     let
         speed =
-            0.05 * deltaMs
+            if keyboard.rightArrowPressed then
+                0.1 * deltaMs
+
+            else if keyboard.leftArrowPressed then
+                -0.1 * deltaMs
+
+            else
+                0
     in
     { hero | x = hero.x + speed }
 
