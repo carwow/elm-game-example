@@ -49,11 +49,29 @@ moveHero deltaMs keyboard hero =
                 0
     in
     { hero | x = hero.x + speed }
+        |> checkHeroCollisions
+
+
+checkHeroCollisions : Hero -> Hero
+checkHeroCollisions hero =
+    if hero.x + 20 > worldSize then
+        { hero | x = worldSize - 20 }
+
+    else if hero.x < 0 then
+        { hero | x = 0 }
+
+    else
+        hero
+
+
+worldSize : Float
+worldSize =
+    600
 
 
 backgroundSize : String
 backgroundSize =
-    "600px"
+    String.fromInt (round worldSize)
 
 
 render : Game -> Html a
